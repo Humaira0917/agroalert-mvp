@@ -101,7 +101,21 @@
 
     <p id="msg"></p>
   </div>
+<script>
+  if (!localStorage.getItem("preferredLanguage")) {
+    window.location.href = "language.html";
+  }
+</script>
 
+const location = prompt("Enter your village / city (Primary Location)");
+if (location) {
+  await supabaseClient.from("farmer_profile").insert({
+    user_id: user.id,
+    primary_location: location
+  });
+}
+<script></script>
+</script>
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
 </body>

@@ -15,8 +15,9 @@ async function loadDashboard() {
     return;
   }
 const name = user.email.split("@")[0];
-document.getElementById("welcomeFarmer").innerText =
-  "Welcome farmer, " + name;
+document.getElementById("welcome").innerText =
+  `Welcome farmer, ${name}`;
+
 
   loadHistory(user.id);
 }
@@ -67,3 +68,5 @@ async function logout() {
 
 // ---------------- START ----------------
 loadDashboard();
+// Optional: show toast on load
+showToast(`Welcome farmer, ${name} 🌾`);

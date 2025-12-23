@@ -548,9 +548,31 @@
         color: #667eea;
         font-weight: 600;
       }
+      .toast {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  background: #4caf50;
+  color: white;
+  padding: 14px 20px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  font-size: 15px;
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: all 0.4s ease;
+  z-index: 999;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
     </style>
   </head>
   <body>
+    
     <div class="container">
      <div class="header">
   <div class="title-section">
@@ -643,7 +665,8 @@
         </div>
       </div>
     </div>  
-    
+    <div id="toast" class="toast"></div>
+
 <!-- Supabase client library -->
 <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 <script>
@@ -670,6 +693,20 @@
   // DO NOTHING if user exists
 })();
 
+(async function loadPrimaryLocation() {
+  const { data: authData } = await supabaseClient.auth.getUser();
+  if (!authData.user) return;
+
+  const { data } = await supabaseClient
+    .from("farmer_profile")
+    .select("primary_location")
+    .eq("user_id", authData.user.id)
+    .single();
+
+  if (data?.primary_location) {
+    document.getElementById("cityInput").value = data.primary_location;
+  }
+})();
 
   async function getLoggedInUser() {
     const { data } = await supabaseClient.auth.getUser();
@@ -694,6 +731,23 @@
       console.warn("History not saved:", err.message);
     }
   }
+async function checkPrimaryLocation() {
+  const { data: authData } = await supabaseClient.auth.getUser();
+  if (!authData.user) return;
+
+  const { data } = await supabaseClient
+    .from("farmer_profile")
+    .select("primary_location")
+    .eq("user_id", authData.user.id)
+    .single();
+
+  if (data?.primary_location) {
+    document.getElementById("cityInput").value = data.primary_location;
+    getWeatherAlert(); // AUTO LOAD
+  } else {
+    askPrimaryLocation();
+  }
+}
 
       // Speech Recognition API setup
       const SpeechRecognition =

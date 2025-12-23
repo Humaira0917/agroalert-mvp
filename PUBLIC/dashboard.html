@@ -25,14 +25,20 @@
 
   /* Sidebar */
   .sidebar {
-    width: 220px;
-    background: linear-gradient(135deg, #5d67ea, #764ba2);
+    width: 230px;
+    background: linear-gradient(180deg, #5d67ea, #764ba2);
     color: white;
-    padding: 20px;
+    padding: 24px 18px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 14px;
   }
+
+.sidebar h2 {
+  font-size: 22px;
+  margin-bottom: 24px;
+  letter-spacing: 0.5px;
+}
 
   .logo {
     margin-bottom: 25px;
@@ -40,36 +46,56 @@
 
   /* Buttons */
   .nav-btn {
-    background: rgba(255,255,255,0.15);
+    background: rgba(255,255,255,0.14);
     border: none;
     color: white;
-    padding: 12px 14px;
-    border-radius: 12px;
+    padding: 14px 16px;
+    border-radius: 14px;
     font-size: 15px;
     cursor: pointer;
-    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.25s ease;
   }
 
   .nav-btn:hover {
     background: rgba(255,255,255,0.25);
+    transform: translatex(4px);
   }
-
+.nav-btn.active {
+  background: white;
+  color: #5d67ea;
+  font-weight: 600;
+}
   .logout-btn {
     margin-top: auto;
     background: #ff6b6b;
   }
-
+  .logout-btn:hover {
+  background: #ff4d4d;
+}
   /* Main content */
   .main-content {
     flex: 1;
-    padding: 30px;
+    padding: 40px;
+    background:#f4f6fb;
   }
+#welcome {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
 
   .section-title {
     margin-top: 25px;
     margin-bottom: 15px;
   }
-
+.subtitle-text {
+  color: #777;
+  font-size: 15px;
+  margin-bottom: 30px;
+}
   /* History cards */
   #history > div {
     background: white;
@@ -96,15 +122,16 @@
     </aside>
 
     <!-- MAIN CONTENT -->
-    <main class="main-content">
-     <h2 id="welcome"></h2>
-
-
-      <h3 class="section-title">Weather Alert History</h3>
-      <div id="history"></div>
-    </main>
-
+    <div class="main-content">
+  <div id="welcome">Welcome farmer</div>
+  <div class="subtitle-text">
+    Check today’s weather alerts and your history 🌾
   </div>
+
+  <h3 class="section-title">Weather Alert History</h3>
+  <div id="history"></div>
+</div>
+
 
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="dashboard.js"></script>
