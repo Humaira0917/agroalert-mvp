@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>AgroAlert – Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- OPTIONAL: reuse same styles as index.html -->
+  <style>
+    body {
+  display: block;
+  padding: 0;
+  background: #f4f6fb;
+}
+
+  body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: #f4f6fb;
+  }
+
+  .app-layout {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* Sidebar */
+  .sidebar {
+    width: 220px;
+    background: linear-gradient(135deg, #5d67ea, #764ba2);
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .logo {
+    margin-bottom: 25px;
+  }
+
+  /* Buttons */
+  .nav-btn {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 15px;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .nav-btn:hover {
+    background: rgba(255,255,255,0.25);
+  }
+
+  .logout-btn {
+    margin-top: auto;
+    background: #ff6b6b;
+  }
+
+  /* Main content */
+  .main-content {
+    flex: 1;
+    padding: 30px;
+  }
+
+  .section-title {
+    margin-top: 25px;
+    margin-bottom: 15px;
+  }
+
+  /* History cards */
+  #history > div {
+    background: white;
+    border-radius: 14px;
+    padding: 15px;
+    margin-bottom: 12px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  }
+</style>
+
+</head>
+
+<body>
+  <div class="app-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <h2 class="logo">🌾 AgroAlert</h2>
+
+      <button class="nav-btn" onclick="goToWeather()">🌦 Check Weather</button>
+      <button class="nav-btn" onclick="toggleHistory()">📊 View History</button>
+
+      <button class="nav-btn logout-btn" onclick="logout()">🚪 Logout</button>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+     <h2 id="welcome"></h2>
+
+
+      <h3 class="section-title">Weather Alert History</h3>
+      <div id="history"></div>
+    </main>
+
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="dashboard.js"></script>
+</body>
+
+</html>

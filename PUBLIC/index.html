@@ -1,0 +1,1535 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>🌾 AgroAlert - Real-time Alerts for Farmers</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #5d67ea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        padding: 30px;
+        max-width: 520px;
+        width: 100%;
+      }
+
+      @media (min-width: 600px) {
+        .container {
+          padding: 45px;
+        }
+      }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 35px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .title-section {
+        flex: 1;
+      }
+
+      h1 {
+        color: #222;
+        margin-bottom: 8px;
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+
+      .subtitle {
+        color: #999;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 0.3px;
+      }
+
+      .language-selector {
+        display: none;
+        gap: 8px;
+      }
+
+      .language-selector.visible {
+        display: flex;
+      }
+
+      .lang-select {
+        padding: 10px 14px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        background-color: #fafafa;
+        color: #333;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      }
+
+      .lang-select:hover {
+        border-color: #667eea;
+        background-color: white;
+        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.15);
+      }
+
+      .lang-select:focus {
+        outline: none;
+        border-color: #667eea;
+        background-color: white;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      .search-box {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        margin-bottom: 25px;
+        background: #fafafa;
+        padding: 20px;
+        border-radius: 12px;
+      }
+
+      .search-box input {
+        width: 100%;
+        order: -1;
+      }
+
+      .button-row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+      }
+
+      input {
+        padding: 16px 18px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 17px;
+        transition: all 0.3s ease;
+        min-height: 54px;
+        font-weight: 500;
+        background: white;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+      }
+
+      input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 2px 6px rgba(0, 0, 0, 0.04);
+      }
+
+      input::placeholder {
+        color: #bbb;
+        font-weight: 400;
+      }
+
+      button {
+        padding: 14px 22px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        min-height: 54px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
+
+      #checkBtn {
+        flex: 1 0 auto;
+        padding: 14px 24px;
+        font-size: 17px;
+        font-weight: 700;
+      }
+
+      button:hover {
+        background: #5568d3;
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        transform: translateY(-2px);
+      }
+
+      button:active {
+        transform: scale(0.98);
+      }
+
+      .voice-btn {
+        flex: 1 0 auto;
+        padding: 14px 12px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        min-height: 54px;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
+
+      .voice-btn:hover {
+        background: #5568d3;
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        transform: translateY(-2px);
+      }
+
+      .voice-btn:active {
+        transform: scale(0.95);
+      }
+
+      .voice-btn.recording {
+        background: #ff4757;
+        animation: pulse 1s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+        }
+        50% {
+          box-shadow: 0 0 0 10px rgba(255, 71, 87, 0);
+        }
+      }
+
+      .location-btn {
+        flex: 1 0 auto;
+        padding: 14px 12px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        min-height: 54px;
+        white-space: nowrap;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+      }
+
+      .location-btn:hover {
+        background: #5568d3;
+        box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+        transform: translateY(-2px);
+      }
+
+      .location-btn:active {
+        transform: scale(0.95);
+      }
+
+      .location-btn.locating {
+        background: #00b894;
+        animation: pulse 1s infinite;
+      }
+
+      .location-info {
+        text-align: center;
+        font-size: 14px;
+        color: #777;
+        margin-top: 8px;
+        margin-bottom: 20px;
+        font-weight: 500;
+      }
+
+      @media (min-width: 600px) {
+        .search-box {
+          flex-direction: row;
+          padding: 0;
+          background: transparent;
+          gap: 12px;
+        }
+
+        .search-box input {
+          flex: 1 1 auto;
+          order: 0;
+        }
+
+        .button-row {
+          flex: 0 0 auto;
+          width: auto;
+          gap: 12px;
+        }
+
+        .voice-btn,
+        .location-btn {
+          flex: 0 0 auto;
+          padding: 14px 18px;
+          font-size: 17px;
+          gap: 6px;
+          min-height: 54px;
+        }
+
+        #checkBtn {
+          flex: 0 0 auto;
+          padding: 14px 32px;
+          font-size: 17px;
+        }
+      }
+
+      .result {
+        display: none;
+        padding: 30px;
+        border-radius: 12px;
+        margin-top: 30px;
+        animation: slideIn 0.3s ease;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .result.visible {
+        display: block;
+      }
+
+      .alert-normal {
+        background: #d4edda;
+        border: 2px solid #28a745;
+        color: #155724;
+      }
+
+      .alert-heat {
+        background: #fff3cd;
+        border: 2px solid #ff6b6b;
+        color: #856404;
+      }
+
+      .alert-cold {
+        background: #d1ecf1;
+        border: 2px solid #17a2b8;
+        color: #0c5460;
+      }
+
+      .alert-rain {
+        background: #cce5ff;
+        border: 2px solid #0066cc;
+        color: #004085;
+      }
+
+      .alert-storm {
+        background: #f8d7da;
+        border: 2px solid #721c24;
+        color: #721c24;
+      }
+
+      .result-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 25px;
+        line-height: 1.3;
+      }
+
+      .result-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .data-item {
+        background: rgba(255, 255, 255, 0.6);
+        padding: 18px;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(4px);
+      }
+
+      .data-label {
+        font-size: 13px;
+        opacity: 0.85;
+        margin-bottom: 8px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .data-value {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .error {
+        background: #f8d7da;
+        border: 2px solid #721c24;
+        color: #721c24;
+        padding: 25px;
+        border-radius: 12px;
+        margin-top: 25px;
+        display: none;
+        font-weight: 500;
+        font-size: 15px;
+        line-height: 1.5;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+
+      .error.visible {
+        display: block;
+      }
+
+      .loading {
+        text-align: center;
+        color: #667eea;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        display: none;
+        font-weight: 500;
+        font-size: 16px;
+      }
+
+      .loading.visible {
+        display: block;
+      }
+
+      .spinner {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 10px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .nav-tabs {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #f0f0f0;
+      }
+
+      .nav-tab {
+        padding: 14px 24px;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: #999;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .nav-tab:hover {
+        color: #667eea;
+      }
+
+      .nav-tab.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+      }
+
+      .content-section {
+        display: none;
+      }
+
+      .content-section.active {
+        display: block;
+        animation: slideIn 0.3s ease;
+      }
+
+      .crop-advice-container {
+        margin-top: 15px;
+      }
+
+      .advice-subtitle {
+        text-align: center;
+        color: #999;
+        font-size: 15px;
+        margin-bottom: 28px;
+        font-style: italic;
+        font-weight: 500;
+      }
+
+      .crop-card {
+        background: white;
+        border-radius: 12px;
+        padding: 22px;
+        margin-bottom: 18px;
+        border-left: 5px solid #667eea;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        transition: box-shadow 0.3s ease;
+      }
+
+      .crop-card:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+      }
+
+      .crop-category-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #222;
+        margin-bottom: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+      }
+
+      .crop-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+
+      .crop-item {
+        background: #f5f5f5;
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 14px;
+        border: 1px solid #e0e0e0;
+        color: #444;
+        font-weight: 500;
+      }
+
+      .crop-tips {
+        background: #fafafa;
+        padding: 14px;
+        border-radius: 8px;
+        font-size: 14px;
+        color: #666;
+        line-height: 1.6;
+        border-left: 3px solid #667eea;
+      }
+
+      .crop-tips strong {
+        color: #667eea;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+     <div class="header">
+  <div class="title-section">
+    <h1 id="title">🌾 AgroAlert</h1>
+    <p class="subtitle" id="subtitle">
+      Smart farming, better harvest
+    </p>
+  </div>
+<a
+  href="#"
+  onclick="logout()"
+  style="
+    font-size:14px;
+    color:#730bd5;
+    font-weight:600;
+    text-decoration:none;
+    margin-left:10px;
+  "
+>
+  Logout
+</a>
+  <div class="language-selector visible" id="languageSelector">
+    <select
+      class="lang-select"
+      id="languageSelect"
+      onchange="changeLanguage()"
+    >
+      <option value="en">English</option>
+      <option value="te">తెలుగు</option>
+      <option value="hi">हिंदी</option>
+    </select>
+  </div>
+</div>
+
+
+      <div class="nav-tabs">
+        <button class="nav-tab active" id="weatherTab" onclick="showSection('weather')">
+          <span id="weatherTabText">Weather Alert</span>
+        </button>
+        <button class="nav-tab" id="cropTab" onclick="showSection('crop')">
+          <span id="cropTabText">Crop Advice</span>
+        </button>
+      </div>
+
+      <div id="weatherSection" class="content-section active">
+        <div class="search-box">
+          <input
+            type="text"
+            id="cityInput"
+            placeholder="Enter city or village name"
+            onkeypress="if(event.key==='Enter') getWeatherAlert()"
+          />
+          <div class="button-row">
+            <button
+              class="voice-btn"
+              id="voiceBtn"
+              title="Click to speak city name"
+              onclick="startVoiceInput()"
+            >
+              🎤 <span id="voiceBtnText">Mic</span>
+            </button>
+            <button
+              class="location-btn"
+              id="locationBtn"
+              title="Use current location"
+              onclick="getLocationWeather()"
+            >
+              📍 <span id="locationBtnText">Location</span>
+            </button>
+            <button id="checkBtn" onclick="getWeatherAlert()"><span id="checkBtnText">Check</span></button>
+          </div>
+        </div>
+        <div class="location-info" id="locationInfo"></div>
+
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+          <p id="loadingText">Fetching weather data...</p>
+        </div>
+
+        <div class="error" id="error"></div>
+        <div class="result" id="result"></div>
+      </div>
+
+      <div id="cropSection" class="content-section">
+        <div class="crop-advice-container">
+          <p class="advice-subtitle" id="aiAdviceText">
+            AI-assisted guidance based on weather patterns
+          </p>
+          <div id="cropAdviceContent"></div>
+        </div>
+      </div>
+    </div>  
+    
+<!-- Supabase client library -->
+<script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script>
+  /* ================= SUPABASE INIT ================= */
+
+  const SUPABASE_URL = "https://cwsjwwgytejmgqrdyeuz.supabase.co";
+  const SUPABASE_ANON_KEY = "sb_publishable_nDNfslXg1irQsDT70F_5Xg_zhnjvVXV";
+
+  // IMPORTANT: use a DIFFERENT variable name
+  const supabaseClient = supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
+  async function logout() {
+  await supabaseClient.auth.signOut();
+  window.location.href = "auth.html";
+}
+
+ (async function () {
+  const { data } = await supabaseClient.auth.getUser();
+  if (!data.user) {
+    window.location.href = "auth.html";
+  }
+  // DO NOTHING if user exists
+})();
+
+
+  async function getLoggedInUser() {
+    const { data } = await supabaseClient.auth.getUser();
+    return data?.user || null;
+  }
+
+  async function saveWeatherHistoryIfLoggedIn(data) {
+    try {
+      const user = await getLoggedInUser();
+      if (!user) return;
+
+      await supabaseClient.from("farmer_history").insert({
+        user_id: user.id,
+        location: data.city,
+        alert_type: data.alertMessage,
+        temperature: data.temperature,
+        rainfall: data.rainfall,
+        crop_advice: "Weather-based crop guidance"
+      });
+      
+    } catch (err) {
+      console.warn("History not saved:", err.message);
+    }
+  }
+
+      // Speech Recognition API setup
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+      let recognition = null;
+      let isRecording = false;
+
+      // Initialize speech recognition if available
+      if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = true;
+      }
+
+      // Language mapping for Speech Recognition
+      const languageMap = {
+        en: "en-IN",
+        te: "te-IN",
+        hi: "hi-IN",
+      };
+
+      // Start voice input
+      function startVoiceInput() {
+        if (!recognition) {
+          alert(
+            "Voice input is not supported in your browser. Please use Chrome, Edge, or Safari.",
+          );
+          return;
+        }
+
+        if (isRecording) {
+          recognition.abort();
+          stopVoiceInput();
+          return;
+        }
+
+        // Set language based on selected UI language
+        const lang = languageMap[currentLanguage] || "en-IN";
+        recognition.lang = lang;
+
+        // Update button UI
+        const voiceBtn = document.getElementById("voiceBtn");
+        voiceBtn.classList.add("recording");
+        voiceBtn.title = "Listening... Click to stop";
+        isRecording = true;
+
+        // Clear previous interim result
+        recognition.onstart = function () {
+          document.getElementById("cityInput").style.opacity = "0.6";
+        };
+
+        // Handle interim results
+        recognition.onresult = function (event) {
+          let interimTranscript = "";
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+              // Final result - fill the input
+              document.getElementById("cityInput").value = transcript.trim();
+            } else {
+              interimTranscript += transcript;
+            }
+          }
+          // Show interim result in placeholder
+          if (interimTranscript) {
+            document.getElementById("cityInput").placeholder =
+              "Heard: " + interimTranscript;
+          }
+        };
+
+        // Handle errors
+        recognition.onerror = function (event) {
+          console.error("Speech recognition error:", event.error);
+          let errorMsg = "Could not understand. Try again.";
+          if (event.error === "no-speech") {
+            errorMsg = "No speech detected. Try again.";
+          } else if (event.error === "network") {
+            errorMsg = "Network error. Check connection.";
+          }
+          alert(errorMsg);
+          stopVoiceInput();
+        };
+
+        // Handle end of speech
+        recognition.onend = function () {
+          stopVoiceInput();
+        };
+
+        recognition.start();
+      }
+
+      // Stop voice input
+      function stopVoiceInput() {
+        const voiceBtn = document.getElementById("voiceBtn");
+        voiceBtn.classList.remove("recording");
+        voiceBtn.title = "Click to speak city name";
+        isRecording = false;
+        document.getElementById("cityInput").style.opacity = "1";
+
+        // Restore placeholder
+        const trans = translations[currentLanguage];
+        document.getElementById("cityInput").placeholder = trans.placeholder;
+      }
+
+      // Get weather using location (latitude and longitude)
+      function getLocationWeather() {
+        const locationBtn = document.getElementById("locationBtn");
+        const locationInfo = document.getElementById("locationInfo");
+
+        // Check if geolocation is available
+        if (!navigator.geolocation) {
+          locationInfo.textContent =
+            "📍 Geolocation not supported in your browser";
+          locationInfo.style.color = "#d9534f";
+          return;
+        }
+
+        // Update button UI
+        locationBtn.classList.add("locating");
+        locationBtn.title = "Detecting location...";
+        locationInfo.textContent = "📍 Detecting your location...";
+        locationInfo.style.color = "#667eea";
+
+        // Request user's location
+        navigator.geolocation.getCurrentPosition(
+          async function (position) {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            try {
+              const res = await fetch(`/weather-alert?lat=${lat}&lon=${lon}`);
+              const data = await res.json();
+
+              displayWeather(data);
+             await saveWeatherHistoryIfLoggedIn(data);
+              locationInfo.textContent = `📍 Location detected`;
+              locationInfo.style.color = "#28a745";
+            } catch (err) {
+              locationInfo.textContent =
+                "📍 Failed to fetch weather. Try again.";
+              locationInfo.style.color = "#d9534f";
+            }
+
+            locationBtn.classList.remove("locating");
+            locationBtn.title = "📍 Use current location";
+          },
+          function (error) {
+            locationBtn.classList.remove("locating");
+            locationBtn.title = "📍 Use current location";
+
+            if (error.code === error.PERMISSION_DENIED) {
+              locationInfo.textContent =
+                "📍 Permission denied. Please enter city manually.";
+            } else if (error.code === error.POSITION_UNAVAILABLE) {
+              locationInfo.textContent = "📍 Location unavailable. Try again.";
+            } else {
+              locationInfo.textContent =
+                "📍 Error getting location. Try again.";
+            }
+            locationInfo.style.color = "#d9534f";
+          },
+          { enableHighAccuracy: true, timeout: 10000 },
+        );
+      }
+
+      // Fetch weather using latitude and longitude
+      async function fetchWeatherByCoordinates(
+        lat,
+        lon,
+        locationBtn,
+        locationInfo,
+      ) {
+        const resultDiv = document.getElementById("result");
+        const errorDiv = document.getElementById("error");
+        const loadingDiv = document.getElementById("loading");
+        const trans = translations[currentLanguage];
+
+        // Clear previous results
+        resultDiv.classList.remove("visible");
+        errorDiv.classList.remove("visible");
+        loadingDiv.classList.add("visible");
+
+        try {
+          const response = await fetch(`/weather-alert?lat=${lat}&lon=${lon}`);
+          const data = await response.json();
+
+          loadingDiv.classList.remove("visible");
+          locationBtn.classList.remove("locating");
+          locationBtn.title = "Use current location";
+
+          if (!response.ok) {
+            errorDiv.innerHTML = `<strong>${trans.errorTitle}:</strong> ${data.error}<br>${data.message || ""}`;
+            errorDiv.classList.add("visible");
+            locationInfo.textContent = "📍 " + data.message;
+            locationInfo.style.color = "#d9534f";
+            return;
+          }
+
+          // Display location info
+          locationInfo.textContent = `📍 Location: ${data.city}, ${data.country}`;
+          locationInfo.style.color = "#28a745";
+
+          // Get translated alert message
+          const translatedAlert = getTranslatedAlertMessage(data.alertMessage);
+          const translatedDescription = translateWeatherDescription(
+            data.weatherDescription,
+          );
+
+          // Determine alert class
+          let alertClass = "alert-normal";
+          if (data.alertMessage.includes("Heat")) alertClass = "alert-heat";
+          else if (data.alertMessage.includes("Cold"))
+            alertClass = "alert-cold";
+          else if (data.alertMessage.includes("Heavy Rain"))
+            alertClass = "alert-rain";
+          else if (data.alertMessage.includes("Storm"))
+            alertClass = "alert-storm";
+
+          // Display results
+          resultDiv.innerHTML = `
+            <div class="result-title">${translatedAlert}</div>
+            <div class="result-grid">
+              <div class="data-item">
+                <div class="data-label">${trans.location}</div>
+                <div class="data-value">${data.city}, ${data.country}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">${trans.description}</div>
+                <div class="data-value">${translatedDescription}</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">${trans.temperature}</div>
+                <div class="data-value">${data.temperature}°C</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">${trans.windSpeed}</div>
+                <div class="data-value">${data.windSpeed} km/h</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">${trans.rainfall}</div>
+                <div class="data-value">${data.rainfall} mm</div>
+              </div>
+              <div class="data-item">
+                <div class="data-label">${trans.humidity}</div>
+                <div class="data-value">${data.humidity}%</div>
+              </div>
+            </div>
+          `;
+          resultDiv.className = `result visible ${alertClass}`; 
+        await saveWeatherHistoryIfLoggedIn(data);
+          }
+        catch (error) {
+          loadingDiv.classList.remove("visible");
+          locationBtn.classList.remove("locating");
+          locationBtn.title = "Use current location";
+          errorDiv.textContent = trans.networkError + error.message;
+          errorDiv.classList.add("visible");
+          locationInfo.textContent = "📍 Network error. Try again.";
+          locationInfo.style.color = "#d9534f";
+        }
+      }
+
+      // Translation object for all supported languages
+      const translations = {
+        en: {
+          title: "AgroAlert",
+          subtitle: "Smart farming, better harvest",
+          placeholder: "Enter city name...",
+          checkBtn: "Check",
+          voiceBtn: "Mic",
+          locationBtn: "Location",
+          loadingText: "Fetching weather data...",
+          emptyError: "⚠️ Please enter a city name",
+          networkError: "⚠️ Network error: ",
+          errorTitle: "Error",
+          heatAlert: "Heat Alert",
+          coldAlert: "Cold Alert",
+          heavyRainAlert: "Heavy Rain Alert",
+          stormWarning: "Storm Warning",
+          weatherNormal: "Weather Normal",
+          location: "Location",
+          description: "Description",
+          temperature: "Temperature",
+          windSpeed: "Wind Speed",
+          rainfall: "Rainfall (1h)",
+          humidity: "Humidity",
+          weatherTab: "Weather Alert",
+          cropTab: "Crop Advice",
+          suitableCrops: "Suitable Crops",
+          avoidCrops: "Avoid These",
+          farmingTips: "Farming Tips",
+        },
+        te: {
+          title: "AgroAlert",
+          subtitle: "స్మార్ట్ వ్యవసాయం, మెరుగైన పంట",
+          placeholder: "నగర పేరు నమోదు చేయండి...",
+          checkBtn: "తనిఖీ చేయండి",
+          voiceBtn: "మైక్",
+          locationBtn: "స్థానం",
+          loadingText: "వాతావరణ డేటా పొందుతోంది...",
+          emptyError: "⚠️ దయచేసి నగర పేరు నమోదు చేయండి",
+          networkError: "⚠️ నెట్‌వర్క్ లోపం: ",
+          errorTitle: "లోపం",
+          heatAlert: "వేడి హెచ్చరిక",
+          coldAlert: "చల్లని హెచ్చరిక",
+          heavyRainAlert: "భారీ వర్షం హెచ్చరిక",
+          stormWarning: "తుఫాన్ హెచ్చరిక",
+          weatherNormal: "సాధారణ వాతావరణం",
+          location: "స్థానం",
+          description: "వివరణ",
+          temperature: "ఉష్ణోగ్రత",
+          windSpeed: "గాలి వేగం",
+          rainfall: "వర్ష వర్ధన (1h)",
+          humidity: "ఆర్ధ్రత",
+          weatherTab: "వాతావరణ హెచ్చరిక",
+          cropTab: "పంట సలహాలు",
+          suitableCrops: "సరిపోయే పంటలు",
+          avoidCrops: "ఇవిని తప్పుకోండి",
+          farmingTips: "వ్యవసాయ చిట్కాలు",
+        },
+        hi: {
+          title: "AgroAlert",
+          subtitle: "स्मार्ट खेती, बेहतर फसल",
+          placeholder: "शहर का नाम दर्ज करें...",
+          checkBtn: "जांचें",
+          voiceBtn: "माइक",
+          locationBtn: "स्थान",
+          loadingText: "मौसम डेटा प्राप्त कर रहे हैं...",
+          emptyError: "⚠️ कृपया शहर का नाम दर्ज करें",
+          networkError: "⚠️ नेटवर्क त्रुटि: ",
+          errorTitle: "त्रुटि",
+          heatAlert: "गर्म चेतावनी",
+          coldAlert: "ठंड चेतावनी",
+          heavyRainAlert: "भारी बारिश चेतावनी",
+          stormWarning: "तूफान चेतावनी",
+          weatherNormal: "सामान्य मौसम",
+          location: "स्थान",
+          description: "विवरण",
+          temperature: "तापमान",
+          windSpeed: "हवा की गति",
+          rainfall: "वर्षा (1h)",
+          humidity: "आर्द्रता",
+          weatherTab: "मौसम चेतावनी",
+          cropTab: "फसल सलाह",
+          suitableCrops: "उपयुक्त फसलें",
+          avoidCrops: "इनसे बचें",
+          farmingTips: "खेती के सुझाव",
+        },
+      };
+
+      // Weather description translations
+      const weatherDescriptions = {
+        en: {
+          "clear sky": "Clear Sky",
+          "few clouds": "Few Clouds",
+          "scattered clouds": "Scattered Clouds",
+          "broken clouds": "Broken Clouds",
+          "overcast clouds": "Overcast Clouds",
+          "light rain": "Light Rain",
+          "moderate rain": "Moderate Rain",
+          "heavy rain": "Heavy Rain",
+          "very heavy rain": "Very Heavy Rain",
+          "extreme rain": "Extreme Rain",
+          "freezing rain": "Freezing Rain",
+          "light rain and snow": "Light Rain and Snow",
+          "rain and snow": "Rain and Snow",
+          "light shower snow": "Light Shower Snow",
+          "shower snow": "Shower Snow",
+          "heavy shower snow": "Heavy Shower Snow",
+          "light snow": "Light Snow",
+          snow: "Snow",
+          "heavy snow": "Heavy Snow",
+          mist: "Mist",
+          drizzle: "Drizzle",
+          "light drizzle": "Light Drizzle",
+          "thunderstorm with light rain": "Thunderstorm with Light Rain",
+          "thunderstorm with rain": "Thunderstorm with Rain",
+          "thunderstorm with heavy rain": "Thunderstorm with Heavy Rain",
+          "light thunderstorm": "Light Thunderstorm",
+          thunderstorm: "Thunderstorm",
+          "heavy thunderstorm": "Heavy Thunderstorm",
+          "ragged thunderstorm": "Ragged Thunderstorm",
+          haze: "Haze",
+        },
+        te: {
+          "clear sky": "ఆకాశం స్వచ్ఛంగా ఉంది",
+          "few clouds": "కొన్ని మేఘాలు",
+          "scattered clouds": "చిన్నచిన్న మేఘాలు",
+          "broken clouds": "చిన్నగా మేఘాలు కమ్ముకున్నాయి",
+          "overcast clouds": "మేఘావృతంగా ఉంది",
+          "light rain": "తేలికపాటి వర్షం",
+          "moderate rain": "మితమైన వర్షం",
+          "heavy rain": "భారీ వర్షం",
+          "very heavy rain": "చాలా భారీ వర్షం",
+          "extreme rain": "విపరీతమైన వర్షం",
+          "freezing rain": "గడ్డకట్టే వర్షం",
+          "light rain and snow": "తేలికపాటి వర్షం మరియు మంచు",
+          "rain and snow": "వర్షం మరియు మంచు",
+          "light shower snow": "తేలికపాటి చిందరలేని మంచు",
+          "shower snow": "చిందరలేని మంచు",
+          "heavy shower snow": "భారీ చిందరలేని మంచు",
+          "light snow": "తేలికపాటి మంచు",
+          snow: "మంచు",
+          "heavy snow": "భారీ మంచు",
+          mist: "పొగమంచు",
+          drizzle: "నిమిషాల వర్షం",
+          "light drizzle": "తేలికపాటి నిమిషాల వర్షం",
+          "thunderstorm with light rain": "ఉరుము తో తేలికపాటి వర్షం",
+          "thunderstorm with rain": "ఉరుము తో వర్షం",
+          "thunderstorm with heavy rain": "ఉరుము తో భారీ వర్షం",
+          "light thunderstorm": "తేలికపాటి ఉరుము",
+          thunderstorm: "ఉరుము మరియు విద్యుత్",
+          "heavy thunderstorm": "భారీ ఉరుము",
+          "ragged thunderstorm": "చెదరినటువంటి ఉరుము",
+          haze: "మసక వాతావరణం",
+        },
+        hi: {
+          "clear sky": "साफ आसमान",
+          "few clouds": "कुछ बादल",
+          "scattered clouds": "बिखरे हुए बादल",
+          "broken clouds": "टूटे हुए बादल",
+          "overcast clouds": "बादल छाए हुए",
+          "light rain": "हल्की बारिश",
+          "moderate rain": "मध्यम बारिश",
+          "heavy rain": "भारी बारिश",
+          "very heavy rain": "बहुत भारी बारिश",
+          "extreme rain": "अत्यधिक बारिश",
+          "freezing rain": "जमी हुई बारिश",
+          "light rain and snow": "हल्की बारिश और बर्फ",
+          "rain and snow": "बारिश और बर्फ",
+          "light shower snow": "हल्की बर्फ की बौछार",
+          "shower snow": "बर्फ की बौछार",
+          "heavy shower snow": "भारी बर्फ की बौछार",
+          "light snow": "हल्की बर्फ",
+          snow: "बर्फ",
+          "heavy snow": "भारी बर्फ",
+          mist: "कोहरा",
+          drizzle: "बूंदाबांदी",
+          "light drizzle": "हल्की बूंदाबांदी",
+          "thunderstorm with light rain": "बिजली के साथ हल्की बारिश",
+          "thunderstorm with rain": "बिजली के साथ बारिश",
+          "thunderstorm with heavy rain": "बिजली के साथ भारी बारिश",
+          "light thunderstorm": "हल्का तूफान",
+          thunderstorm: "तूफान और बिजली",
+          "heavy thunderstorm": "भारी तूफान",
+          "ragged thunderstorm": "अनियमित तूफान",
+          haze: "धुंध",
+        },
+      };
+
+      // Current language state (load from localStorage or default to 'en')
+      let currentLanguage = localStorage.getItem("preferredLanguage") || "en";
+
+      // Change language, update UI, and save to localStorage
+      function changeLanguage() {
+        currentLanguage = document.getElementById("languageSelect").value;
+        localStorage.setItem("preferredLanguage", currentLanguage);
+        updateUILanguage();
+      }
+
+      // Update all UI text based on current language
+      function updateUILanguage() {
+        const trans = translations[currentLanguage];
+
+        const titleEl = document.getElementById("title");
+        const subtitleEl = document.getElementById("subtitle");
+        const loadingEl = document.getElementById("loadingText");
+        const cityEl = document.getElementById("cityInput");
+        const checkBtnEl = document.getElementById("checkBtnText");
+        const voiceBtnEl = document.getElementById("voiceBtnText");
+        const locBtnEl = document.getElementById("locationBtnText");
+        const wtabEl = document.getElementById("weatherTabText");
+        const ctabEl = document.getElementById("cropTabText");
+
+        if (titleEl) titleEl.textContent = trans.title;
+        if (subtitleEl) subtitleEl.textContent = trans.subtitle;
+        if (loadingEl) loadingEl.textContent = trans.loadingText;
+        if (cityEl) cityEl.placeholder = trans.placeholder;
+        if (checkBtnEl) checkBtnEl.textContent = trans.checkBtn;
+        if (voiceBtnEl) voiceBtnEl.textContent = trans.voiceBtn;
+        if (locBtnEl) locBtnEl.textContent = trans.locationBtn;
+        if (wtabEl) wtabEl.textContent = trans.weatherTab || "Weather Alert";
+        if (ctabEl) ctabEl.textContent = trans.cropTab || "Crop Advice";
+
+        // Refresh crop advice if on that tab
+        if (document.getElementById("cropSection").classList.contains("active")) {
+          displayDefaultCropAdvice();
+        }
+      }
+
+      // Navigation function to switch between sections
+      function showSection(sectionName) {
+        const langSelector = document.getElementById("languageSelector");
+        
+        // Hide all sections
+        document.getElementById("weatherSection").classList.remove("active");
+        document.getElementById("cropSection").classList.remove("active");
+
+        // Remove active class from all tabs
+        document.getElementById("weatherTab").classList.remove("active");
+        document.getElementById("cropTab").classList.remove("active");
+
+        // Show selected section and activate tab
+        if (sectionName === "weather") {
+          document.getElementById("weatherSection").classList.add("active");
+          document.getElementById("weatherTab").classList.add("active");
+          langSelector.classList.add("visible");
+          document.getElementById("cityInput").focus();
+        } else if (sectionName === "crop") {
+          document.getElementById("cropSection").classList.add("active");
+          document.getElementById("cropTab").classList.add("active");
+          langSelector.classList.remove("visible");
+          displayDefaultCropAdvice();
+        }
+      }
+
+      // Crop recommendations data for different weather conditions
+      const cropRecommendations = {
+        en: {
+          normal: {
+            title: "Normal Weather ✅",
+            suitable: ["Rice", "Wheat", "Cotton", "Sugarcane", "Maize", "Tomato"],
+            avoid: ["Frost-sensitive crops"],
+            tips:
+              "Perfect conditions for most crops. Focus on regular watering, pest management, and weeding.",
+          },
+          heat: {
+            title: "Heat Alert 🌞",
+            suitable: ["Millet", "Sorghum", "Groundnut", "Sesame", "Chili", "Watermelon"],
+            avoid: ["Rice", "Potato", "Pea", "Spinach"],
+            tips:
+              "Use mulching to retain soil moisture. Increase irrigation frequency. Apply organic matter. Avoid field work during peak heat hours.",
+          },
+          cold: {
+            title: "Cold Alert ❄️",
+            suitable: ["Wheat", "Mustard", "Pea", "Carrot", "Spinach", "Cabbage"],
+            avoid: ["Cotton", "Rice", "Sugarcane", "Millet"],
+            tips:
+              "Provide frost protection using cloth covers. Reduce irrigation. Apply warm water in early morning. Wait for frost warning before planting.",
+          },
+          rain: {
+            title: "Heavy Rain Alert 🌧️",
+            suitable: ["Rice", "Jute", "Taro", "Water Spinach"],
+            avoid: ["Cotton", "Groundnut", "Tobacco", "Sesame"],
+            tips:
+              "Ensure proper drainage to prevent waterlogging. Avoid planting in low-lying areas. Delay irrigation. Check crops for root rot.",
+          },
+          storm: {
+            title: "Storm Warning ⛈️",
+            suitable: ["Sheltered crops", "Root vegetables"],
+            avoid: ["Tall crops", "Flowering crops", "Newly planted seedlings"],
+            tips:
+              "Secure unstable plants. Harvest ripe crops quickly. Clear ditches for drainage. Protect crops with windbreaks if possible.",
+          },
+        },
+        te: {
+          normal: {
+            title: "సాధారణ వాతావరణం ✅",
+            suitable: ["వరి", "గోధుమ", "పత్తి", "చెరకు", "మొక్కజొన్న", "టమాటో"],
+            avoid: ["霜చేసే పంటలు"],
+            tips:
+              "చాలా పంటలకు ఆదర్శ పరిస్థితులు. సాధారణ నీటిపోత, తెగుళ్ల నియంత్రణ మరియు కలుపు గచ్చు నిర్వహణపై దృష్టి సారించండి.",
+          },
+          heat: {
+            title: "ఉష్ణ హెచ్చరిక 🌞",
+            suitable: ["బజ్రా", "జోలం", "విరుగు", "నువ్వుల", "మిరపాయ", "పుష్కరం"],
+            avoid: ["వరి", "బంగాళాదుంప", "టమాటో", "పాలకూర"],
+            tips:
+              "నేల తేమను నిలుపుకోవడానికి బహుళ పొర వాడండి. నీటిపోత ఫ్రీకোয়েన్సీ పెంచండి. సేంద్రీయ పదార్థం వర్తించండి.",
+          },
+          cold: {
+            title: "చలి హెచ్చరిక ❄️",
+            suitable: ["గోధుమ", "సార్సపు", "టమాటో", "క్యారెట్", "పాలకూర", "కాబేజ్"],
+            avoid: ["పత్తి", "వరి", "చెరకు", "బజ్రా"],
+            tips:
+              "గడ్డకట్టే సంరక్షణ కోసం గుడ్డలను ఉపయోగించండి. నీటిపోత తగ్గించండి. తొలిభాగంలో గరм నీటిని వర్తించండి.",
+          },
+          rain: {
+            title: "భారీ వర్షం హెచ్చరిక 🌧️",
+            suitable: ["వరి", "జూట్", "పాలక్", "నీరు పుచ్చకూర"],
+            avoid: ["పత్తి", "విరుగు", "తంబాకూ", "నువ్వుల"],
+            tips:
+              "జలమయ నిరోధక చర్యలు సూచించండి. గరిష్ట ప్రాంతాలలో నాటకుండా ఉండండి. నీటిపోత ఆలస్యం చేయండి.",
+          },
+          storm: {
+            title: "తూఫాను హెచ్చరిక ⛈️",
+            suitable: ["సురక్షిత పంటలు", "దిగుమతి కూరగాయలు"],
+            avoid: ["ఎత్తైన పంటలు", "పుష్పించే పంటలు", "కొత్త మొక్కలు"],
+            tips:
+              "అస్థిర మొక్కలను సురక్షితం చేయండి. పక్కవారీ పంటలను త్వరగా సంగ్రహించండి. పరుషుగాలుల నుండి రక్షించండి.",
+          },
+        },
+        hi: {
+          normal: {
+            title: "सामान्य मौसम ✅",
+            suitable: ["धान", "गेहूं", "कपास", "गन्ना", "मक्का", "टमाटर"],
+            avoid: ["पाला-संवेदनशील फसलें"],
+            tips:
+              "अधिकांश फसलों के लिए आदर्श परिस्थितियां। नियमित सिंचाई, कीट प्रबंधन और निराई पर ध्यान दें।",
+          },
+          heat: {
+            title: "गर्मी की चेतावनी 🌞",
+            suitable: ["बाजरा", "ज्वार", "मूंगफली", "तिल", "मिर्च", "तरबूज"],
+            avoid: ["धान", "आलू", "टमाटर", "पालक"],
+            tips:
+              "मिट्टी की नमी बनाए रखने के लिए मल्चिंग करें। सिंचाई की आवृत्ति बढ़ाएं। गर्मी के घंटों में खेत के काम से बचें।",
+          },
+          cold: {
+            title: "ठंड की चेतावनी ❄️",
+            suitable: ["गेहूं", "सरसों", "मटर", "गाजर", "पालक", "गोभी"],
+            avoid: ["कपास", "धान", "गन्ना", "बाजरा"],
+            tips:
+              "पाले से बचाव के लिए कपड़े से ढकें। सिंचाई कम करें। सुबह गुनगुने पानी का इस्तेमाल करें।",
+          },
+          rain: {
+            title: "भारी बारिश की चेतावनी 🌧️",
+            suitable: ["धान", "जूट", "अरबी", "पानी की पालक"],
+            avoid: ["कपास", "मूंगफली", "तंबाकू", "तिल"],
+            tips:
+              "जलभराव से बचाव के लिए अच्छी जल निकासी सुनिश्चित करें। निचले इलाकों में बुवाई न करें। सिंचाई में विलंब करें।",
+          },
+          storm: {
+            title: "तूफान की चेतावनी ⛈️",
+            suitable: ["संरक्षित फसलें", "जड़ वाली सब्जियां"],
+            avoid: ["लंबी फसलें", "फूलने वाली फसलें", "नई पौध"],
+            tips:
+              "अस्थिर पौधों को सुरक्षित करें। पकी हुई फसलों की तुरंत कटाई करें। हवा के लिए अवरोध बनाएं।",
+          },
+        },
+      };
+
+      // Display crop advice based on weather condition
+      function displayCropAdvice(alertType) {
+        const trans = translations[currentLanguage];
+        const recommendations = cropRecommendations[currentLanguage];
+        let condition = "normal";
+
+        if (alertType.includes("Heat")) condition = "heat";
+        else if (alertType.includes("Cold")) condition = "cold";
+        else if (alertType.includes("Heavy Rain")) condition = "rain";
+        else if (alertType.includes("Storm")) condition = "storm";
+
+        const advice = recommendations[condition];
+
+        let html = `
+          <div class="crop-card" style="border-left-color: #667eea;">
+            <div class="crop-category-title">${advice.title}</div>
+            
+            <div class="crop-card">
+              <div class="crop-category-title">✅ ${trans.suitableCrops || "Suitable Crops"}</div>
+              <div class="crop-items">
+                ${advice.suitable.map((crop) => `<span class="crop-item">${crop}</span>`).join("")}
+              </div>
+            </div>
+
+            <div class="crop-card">
+              <div class="crop-category-title">❌ ${trans.avoidCrops || "Avoid These"}</div>
+              <div class="crop-items">
+                ${advice.avoid.map((crop) => `<span class="crop-item" style="background: #fff3cd; border-color: #ffc107;">${crop}</span>`).join("")}
+              </div>
+            </div>
+
+            <div class="crop-card">
+              <div class="crop-category-title">💡 ${trans.farmingTips || "Farming Tips"}</div>
+              <div class="crop-tips">${advice.tips}</div>
+            </div>
+          </div>
+        `;
+
+        document.getElementById("cropAdviceContent").innerHTML = html;
+      }
+
+      // Display default crop advice for all conditions
+      function displayDefaultCropAdvice() {
+        const trans = translations[currentLanguage];
+        const recommendations = cropRecommendations[currentLanguage];
+
+        let html = "";
+        for (const [condition, advice] of Object.entries(recommendations)) {
+          html += `
+            <div class="crop-card">
+              <div class="crop-category-title">${advice.title}</div>
+              
+              <div style="margin-top: 10px; margin-bottom: 10px;">
+                <div style="font-weight: 600; color: #667eea; font-size: 13px; margin-bottom: 5px;">✅ ${trans.suitableCrops || "Suitable Crops"}</div>
+                <div class="crop-items">
+                  ${advice.suitable.map((crop) => `<span class="crop-item">${crop}</span>`).join("")}
+                </div>
+              </div>
+
+              <div style="margin-top: 10px; margin-bottom: 10px;">
+                <div style="font-weight: 600; color: #dc3545; font-size: 13px; margin-bottom: 5px;">❌ ${trans.avoidCrops || "Avoid These"}</div>
+                <div class="crop-items">
+                  ${advice.avoid.map((crop) => `<span class="crop-item" style="background: #fff3cd; border-color: #ffc107;">${crop}</span>`).join("")}
+                </div>
+              </div>
+
+              <div style="margin-top: 10px;">
+                <div style="font-weight: 600; color: #28a745; font-size: 13px; margin-bottom: 5px;">💡 ${trans.farmingTips || "Farming Tips"}</div>
+                <div class="crop-tips">${advice.tips}</div>
+              </div>
+            </div>
+          `;
+        }
+
+        document.getElementById("cropAdviceContent").innerHTML = html;
+      }
+
+      // Get translated alert message based on the alert type
+      function getTranslatedAlertMessage(originalMessage) {
+        const trans = translations[currentLanguage];
+
+        if (originalMessage.includes("Heat")) return trans.heatAlert;
+        if (originalMessage.includes("Cold")) return trans.coldAlert;
+        if (originalMessage.includes("Heavy Rain")) return trans.heavyRainAlert;
+        if (originalMessage.includes("Storm")) return trans.stormWarning;
+        return trans.weatherNormal;
+      }
+
+      // Translate weather description to selected language
+      function translateWeatherDescription(originalDescription) {
+        if (!originalDescription) return originalDescription;
+
+        const descriptions = weatherDescriptions[currentLanguage];
+        const lowerDesc = originalDescription.toLowerCase();
+
+        // Check for exact match first
+        if (descriptions[lowerDesc]) {
+          return descriptions[lowerDesc];
+        }
+
+        // If no translation found, return original
+        return originalDescription;
+      }
+
+      // Main weather alert function
+      async function getWeatherAlert() {
+        const city = document.getElementById("cityInput").value.trim();
+        const resultDiv = document.getElementById("result");
+        const errorDiv = document.getElementById("error");
+        const loadingDiv = document.getElementById("loading");
+        const trans = translations[currentLanguage];
+
+        // Clear previous results
+        resultDiv.classList.remove("visible");
+        errorDiv.classList.remove("visible");
+        loadingDiv.classList.add("visible");
+
+        if (!city) {
+          errorDiv.textContent = trans.emptyError;
+          errorDiv.classList.add("visible");
+          loadingDiv.classList.remove("visible");
+          return;
+        }
+
+        try {
+          const response = await fetch(
+            `/weather-alert?city=${encodeURIComponent(city)}`,
+          );
+          const data = await response.json();
+
+          loadingDiv.classList.remove("visible");
+
+          if (!response.ok) {
+            errorDiv.innerHTML = `<strong>${trans.errorTitle}:</strong> ${data.error}<br>${data.message || ""}`;
+            errorDiv.classList.add("visible");
+            return;
+          }
+
+          // Get translated alert message
+          const translatedAlert = getTranslatedAlertMessage(data.alertMessage);
+
+          // Get translated weather description
+          const translatedDescription = translateWeatherDescription(
+            data.weatherDescription,
+          );
+
+          // Determine alert class (same logic as before)
+          let alertClass = "alert-normal";
+          if (data.alertMessage.includes("Heat")) alertClass = "alert-heat";
+          else if (data.alertMessage.includes("Cold"))
+            alertClass = "alert-cold";
+          else if (data.alertMessage.includes("Heavy Rain"))
+            alertClass = "alert-rain";
+          else if (data.alertMessage.includes("Storm"))
+            alertClass = "alert-storm";
+
+          // Display results with translated labels
+          resultDiv.innerHTML = `
+          <div class="result-title">${translatedAlert}</div>
+          <div class="result-grid">
+            <div class="data-item">
+              <div class="data-label">${trans.location}</div>
+              <div class="data-value">${data.city}, ${data.country}</div>
+            </div>
+            <div class="data-item">
+              <div class="data-label">${trans.description}</div>
+              <div class="data-value">${translatedDescription}</div>
+            </div>
+            <div class="data-item">
+              <div class="data-label">${trans.temperature}</div>
+              <div class="data-value">${data.temperature}°C</div>
+            </div>
+            <div class="data-item">
+              <div class="data-label">${trans.windSpeed}</div>
+              <div class="data-value">${data.windSpeed} km/h</div>
+            </div>
+            <div class="data-item">
+              <div class="data-label">${trans.rainfall}</div>
+              <div class="data-value">${data.rainfall} mm</div>
+            </div>
+            <div class="data-item">
+              <div class="data-label">${trans.humidity}</div>
+              <div class="data-value">${data.humidity}%</div>
+            </div>
+          </div>
+        `;
+          resultDiv.className = `result visible ${alertClass}`;
+          await saveWeatherHistoryIfLoggedIn(data);
+        } catch (error) {
+          loadingDiv.classList.remove("visible");
+          errorDiv.textContent = trans.networkError + error.message;
+          errorDiv.classList.add("visible");
+        }
+      }
+
+      // Initialize on page load
+      window.addEventListener("load", () => {
+        // Restore language from localStorage and set dropdown
+        currentLanguage = localStorage.getItem("preferredLanguage") || "en";
+        document.getElementById("languageSelect").value = currentLanguage;
+
+        // Update UI with saved language
+        updateUILanguage();
+        document.getElementById("cityInput").focus();
+      });
+    </script>
+  </body>
+</html>

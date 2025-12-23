@@ -1,0 +1,17 @@
+{
+  "name": "weather-alert-system",
+  "version": "1.0.0",
+  "description": "Weather Alert System for Farmers",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node index.js"
+  },
+  "keywords": ["weather", "alerts", "farmers", "express"],
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.13.2",
+    "dotenv": "^16.3.1",
+    "express": "^4.22.1"
+  }
+}
