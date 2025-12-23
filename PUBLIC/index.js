@@ -172,3 +172,24 @@ function displayWeather(data) {
 
   resultDiv.className = `result visible ${alertClass}`;
 }
+function askPrimaryLocation() {
+  const location = prompt(
+    "🌾 Enter your village / city (Primary Location)"
+  );
+
+  if (!location) return;
+
+  savePrimaryLocation(location);
+}
+async function savePrimaryLocation(location) {
+  const { data: authData } = await supabaseClient.auth.getUser();
+  if (!authData.user) return;
+
+  await supabaseClient.from("farmer_profile").upsert({
+    user_id: authData.user.id,
+    primary_location: location
+  });
+
+  document.getElementById("cityInput").value = location;
+  getWeatherAlert();
+}
