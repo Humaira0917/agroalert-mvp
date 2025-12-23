@@ -8,21 +8,6 @@ const supabaseClient = supabase.createClient(
   SUPABASE_ANON_KEY
 );
 
-// ✅ Signup function
-async function signup() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  const { error } = await supabaseClient.auth.signUp({
-    email,
-    password
-  });
-
-  document.getElementById("msg").innerText =
-    error ? error.message : "Signup successful. Please login.";
-}
-
-// ✅ Login function
 async function login() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
